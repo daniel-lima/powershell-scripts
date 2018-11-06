@@ -28,13 +28,13 @@ foreach ($year in $years) {
        $tables = Get-ChildItem -LiteralPath $dayDir | sort LastWriteTime
        foreach ($table in $tables) {
           $srcTable = Join-Path $dayDir $table.Name
-          $targetTable = Join-Path $roomHandDir $table.Name
+          $destTable = Join-Path $roomHandDir $table.Name
           $srcTableFile = Get-Item -LiteralPath $srcTable
           $copy = $false
-          if (Test-Path -LiteralPath $targetTable) {
-             $targetTableFile = Get-Item -LiteralPath $targetTable
-             if ($srcTableFile.Length -gt $targetTableFile.Length) {
-                Remove-Item -LiteralPath $targetTable
+          if (Test-Path -LiteralPath $destTable) {
+             $destTableFile = Get-Item -LiteralPath $destTable
+             if ($srcTableFile.Length -gt $destTableFile.Length) {
+                Remove-Item -LiteralPath $destTable
                 $copy = $True
              }
           } else {
@@ -42,7 +42,7 @@ foreach ($year in $years) {
           }
           
           if ($copy) {
-             Copy-Item $srcTable $targetTable
+             Copy-Item $srcTable $destTable
           }
        }
    }

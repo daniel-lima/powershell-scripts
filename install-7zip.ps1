@@ -1,4 +1,7 @@
-param([string] $workingDir = $pwd)
+param(
+   [parameter(Mandatory=$true, Position=0)]
+   [string] $workingDir
+)
 
 $7zaExePath = Join-Path $workingDir '7za.exe'
 $7zaZipPath = Join-Path $workingDir '7za920.zip'
@@ -17,4 +20,6 @@ if (-Not (Test-Path -LiteralPath $7zaExePath)) {
          $targetDir.copyHere($item, 16)
       }
    }
+
+   Remove-Item -LiteralPath "$7zaZipPath"
 }

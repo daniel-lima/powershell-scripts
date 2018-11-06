@@ -33,12 +33,6 @@ foreach ($year in $years) {
           
           if ($copy) {
              Copy-Item $srcTable $targetTable
-             #$targetTableFile = Get-Item -LiteralPath $targetTable
-             #$targetTableFile.CreationTime = $srcTableFile.CreationTime
-             #$targetTableFile.LastAccessTime = $srcTableFile.LastAccessTime
-             #$targetTableFile.LastWriteTime = $srcTableFile.LastWriteTime
-             #$targetTableFile.Attributes = $srcTableFile.Attributes
-             #$targetTableFile.SetAccessControl($srcTableFile.GetAccessControl())
           }
        }
    }

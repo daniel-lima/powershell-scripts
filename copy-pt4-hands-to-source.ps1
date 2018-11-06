@@ -8,6 +8,16 @@ param(
     [string] $roomHandDir
 )
 
+if (-Not (Test-Path -LiteralPath $pt4ProcRoomDir)) {
+   Write-Host "Could not find $pt4ProcRoomDir"
+   exit 10
+}
+
+if (-Not (Test-Path -LiteralPath $roomHandDir)) {
+   Write-Host "Could not find $roomHandDir"
+   exit 20
+}
+
 $years = Get-ChildItem -LiteralPath $pt4ProcRoomDir | sort LastWriteTime
 foreach ($year in $years) {
    $yearDir = Join-Path $pt4ProcRoomDir $year.Name

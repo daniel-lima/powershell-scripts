@@ -31,7 +31,7 @@ function Run-7Zip() {
    Invoke-Expression "& '$myDir\install-7zip.ps1' '$pwd'"
 
    set-alias sz "$pwd\\7za.exe"
-   sz a -mx=9 "$targetZip" "$srcDir"
+   sz a -mx=9 -y "$targetZip" "$srcDir" > $null
 }
 
 
@@ -69,6 +69,6 @@ foreach ($room in $rooms) {
    $timestamp = (Get-Date).tostring('yyyyMMddHHmmss')
    $destZip = "$destDir\\$room.$timestamp.zip"
 
-   Write-Host "$roomDataDir $destZip"
+   #Write-Host "$roomDataDir $destZip"
    Run-7Zip "$roomDataDir" "$destZip"
 }

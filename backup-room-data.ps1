@@ -30,6 +30,7 @@ function Run-7Zip() {
       [string[]] $sources
    )
 
+   #Write-Host "sources "$sources.length
    $args = New-Object System.Collections.ArrayList
    for ($i=0; $i -lt $sources.length; $i++) {
      $source = $sources[$i]
@@ -45,6 +46,7 @@ function Run-7Zip() {
 }
 
 
+$timestamp = (Get-Date).tostring('yyyyMMddHHmmss')
 foreach ($room in $rooms) {
    switch ($room) {
          'PokerStars' {
@@ -76,13 +78,11 @@ foreach ($room in $rooms) {
       Invoke-Expression "& '$myDir\copy-pt4-hands-to-source.ps1' -pt4ProcRoomDir '$pt4ProcDir' -roomHandDir '$roomHandDir'" 
    }
 
-   $timestamp = (Get-Date).tostring('yyyyMMddHHmmss')
    $destZip = "$destDir\\$room.$timestamp.zip"
 
    #Write-Host "$roomDataDir $destZip"
    Run-7Zip "$destZip" "$roomDataDir"
 }
-
 
 if ($extraFiles.Length -gt 0) {
    foreach ($extraFile in $extraFiles) {
@@ -92,5 +92,8 @@ if ($extraFiles.Length -gt 0) {
          Write-Host "Could not find $extraFile"
          exit 20
       }   
-   }  
+   }
+
+   $destZip = "$destDir\\extra.$timestamp.zip"
+   Run-7Zip "$destZip" -sources $extraFiles
 }

@@ -5,10 +5,12 @@ param(
    [parameter(Mandatory=$true)]
    [string] $player,
 
-   [parameter(Position=0)]
-   [string] $destDir = $pwd,
+   [string[]] $extraFiles = @(), 
 
-   [Switch] $skipRestorePt4Hands
+   [Switch] $skipRestorePt4Hands,
+
+   [parameter(Position=0)]
+   [string] $destDir = $pwd
 )
 
 
@@ -22,16 +24,24 @@ $destDir = $destDir -replace '\\', '\\'
 function Run-7Zip() {
    param(
       [parameter(Mandatory=$true, Position=0)]
-      [string] $srcDir,
+      [string] $targetZip,
 
-      [parameter(Mandatory=$true, Position=1)]
-      [string] $targetZip
+      [parameter(Mandatory=$true, ValueFromRemainingArguments=$true)]
+      [string[]] $sources
    )
+
+   $args = New-Object System.Collections.ArrayList
+   for ($i=0; $i -lt $sources.length; $i++) {
+     $source = $sources[$i]
+     $args.Add("`"$source`"") > $null
+   }
+   $argsAsStr = $args -Join ' '
+   #Write-Host "args = $argsAsStr"
 
    Invoke-Expression "& '$myDir\install-7zip.ps1' '$pwd'"
 
    set-alias sz "$pwd\\7za.exe"
-   sz a -mx=9 -y "$targetZip" "$srcDir" > $null
+   sz a -mx=9 -y "$targetZip" $argsAsStr > $null
 }
 
 
@@ -70,5 +80,17 @@ foreach ($room in $rooms) {
    $destZip = "$destDir\\$room.$timestamp.zip"
 
    #Write-Host "$roomDataDir $destZip"
-   Run-7Zip "$roomDataDir" "$destZip"
+   Run-7Zip "$destZip" "$roomDataDir"
+}
+
+
+if ($extraFiles.Length -gt 0) {
+   foreach ($extraFile in $extraFiles) {
+      $files = Get-Item -Path "$extraFile"
+
+      if ($files.Length -lt 1) {
+         Write-Host "Could not find $extraFile"
+         exit 20
+      }   
+   }  
 }

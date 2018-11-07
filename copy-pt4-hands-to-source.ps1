@@ -33,7 +33,8 @@ foreach ($year in $years) {
           $copy = $false
           if (Test-Path -LiteralPath "$destTable") {
              $destTableFile = Get-Item -LiteralPath "$destTable"
-             if ($srcTableFile.Length -gt $destTableFile.Length) {
+             if ($srcTableFile.Length -gt $destTableFile.Length -or
+                   $srcTableFile.LastWriteTime -gt $destTableFile.LastWriteTime) {
                 Remove-Item -LiteralPath "$destTable"
                 $copy = $True
              }

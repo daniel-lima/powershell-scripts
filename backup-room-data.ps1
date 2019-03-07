@@ -1,11 +1,13 @@
 param(
-   [ValidateSet("PokerStars", "888poker")]
-   [string[]] $rooms = @("PokerStars", "888poker", "Bodog"),
+   [ValidateSet("PokerStars", "888poker", "Bodog", "Bovada")]
+   [string[]] $rooms = @("PokerStars", "888poker", "Bodog", "Bovada"),
 
    [parameter(Mandatory=$true)]
    [string] $player,
 
    [string] $bodogPlayer,
+
+   [string] $bovadaPlayer,
 
    [string[]] $extraFiles = @(), 
 
@@ -61,12 +63,19 @@ foreach ($room in $rooms) {
              $roomDataDir = "$userProfile\\Bodog.com Poker"
              if (-Not ($bodogPlayer)) {
                 Write-Host 'Missing parameter bodogPlayer'
+                exit 8
+             }
+         }
+         'Bovada' {
+             $roomDataDir = "$userProfile\\Bovada.lv Poker"
+             if (-Not ($bovadaPlayer)) {
+                Write-Host 'Missing parameter bovadaPlayer'
                 exit 9
              }
          }
    }
 
-   if (-Not (Test-Path -LiteralPath $roomDataDir)) {
+   if (-Not (Test-Path -LiteralPath "$roomDataDir" -PathType Container)) {
      Write-Host "Could not find $roomDataDir"
      exit 10
    }
@@ -84,7 +93,11 @@ foreach ($room in $rooms) {
                     }
          'Bodog' {
                        $pt4ProcDir = Join-Path $pt4ProcDir 'Ignition'
-                       $roomHandDir = "$roomDataDir\\HandHistory\\$bodogPlayer"
+                       $roomHandDir = "$roomDataDir\\Hand History\\$bodogPlayer"
+                    }
+         'Bovada' {
+                       $pt4ProcDir = Join-Path $pt4ProcDir 'Ignition'
+                       $roomHandDir = "$roomDataDir\\Hand History\\$bovadaPlayer"
                     }
       }
 

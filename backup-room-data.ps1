@@ -58,7 +58,7 @@ foreach ($room in $rooms) {
              $roomDataDir = "$userProfile\\Documents\\888poker"
          }
          'Bodog' {
-             $roomDataDir = "$userProfile\\Documents\\Bodog.com Poker"
+             $roomDataDir = "$userProfile\\Bodog.com Poker"
              if (-Not ($bodogPlayer)) {
                 Write-Host 'Missing parameter bodogPlayer'
                 exit 9

@@ -1,9 +1,11 @@
 param(
    [ValidateSet("PokerStars", "888poker")]
-   [string[]] $rooms = @("PokerStars", "888poker"),
+   [string[]] $rooms = @("PokerStars", "888poker", "Bodog"),
 
    [parameter(Mandatory=$true)]
    [string] $player,
+
+   [string] $bodogPlayer,
 
    [string[]] $extraFiles = @(), 
 
@@ -55,6 +57,13 @@ foreach ($room in $rooms) {
          '888poker' {
              $roomDataDir = "$userProfile\\Documents\\888poker"
          }
+         'Bodog' {
+             $roomDataDir = "$userProfile\\Documents\\Bodog.com Poker"
+             if (-Not ($bodogPlayer)) {
+                Write-Host 'Missing parameter bodogPlayer'
+                exit 9
+             }
+         }
    }
 
    if (-Not (Test-Path -LiteralPath $roomDataDir)) {
@@ -72,6 +81,10 @@ foreach ($room in $rooms) {
          '888poker' {
                        $pt4ProcDir = Join-Path $pt4ProcDir '888 Poker'
                        $roomHandDir = "$roomDataDir\\HandHistory\\$player"
+                    }
+         'Bodog' {
+                       $pt4ProcDir = Join-Path $pt4ProcDir 'Ignition'
+                       $roomHandDir = "$roomDataDir\\HandHistory\\$bodogPlayer"
                     }
       }
 

@@ -1,6 +1,6 @@
 param(
-   [ValidateSet("PokerStars", "888poker", "Bodog", "Bovada")]
-   [string[]] $rooms = @("PokerStars", "888poker", "Bodog", "Bovada"),
+   [ValidateSet("PokerStars", "888poker", "Bodog", "Bovada", "RIO")]
+   [string[]] $rooms = @("PokerStars", "888poker", "Bodog", "Bovada", "RIO"),
 
    [parameter(Mandatory=$true)]
    [string] $player,
@@ -52,6 +52,8 @@ function Run-7Zip() {
 
 $timestamp = (Get-Date).tostring('yyyyMMddHHmmss')
 foreach ($room in $rooms) {
+   Write-Debug "=== Processing ${room} ==="
+
    switch ($room) {
          'PokerStars' {
             $roomDataDir = "$localAppData\\PokerStars"
@@ -72,6 +74,9 @@ foreach ($room in $rooms) {
                 Write-Host 'Missing parameter bovadaPlayer'
                 exit 9
              }
+         }
+         'RIO' {
+             $roomDataDir = "$localAppData\\Run It Once Poker"
          }
    }
 
@@ -99,14 +104,21 @@ foreach ($room in $rooms) {
                        $pt4ProcDir = Join-Path $pt4ProcDir 'Ignition'
                        $roomHandDir = "$roomDataDir\\Hand History\\$bovadaPlayer"
                     }
+         'RIO' {
+                       $pt4ProcDir = $null
+                       $roomHandDir = "$roomDataDir\\hand_histories"
+                    }
       }
 
-      Invoke-Expression "& '$myDir\copy-pt4-hands-to-source.ps1' -pt4ProcRoomDir '$pt4ProcDir' -roomHandDir '$roomHandDir'" 
+      if ($pt4ProcDir) {
+         Write-Debug " copying the contents from $pt4ProcDir to $roomHandDir"
+         Invoke-Expression "& '$myDir\copy-pt4-hands-to-source.ps1' -pt4ProcRoomDir '$pt4ProcDir' -roomHandDir '$roomHandDir'"
+      }
    }
 
    $destZip = "$destDir\\$room.$timestamp.zip"
 
-   #Write-Host "$roomDataDir $destZip"
+   Write-Debug " compressing $roomDataDir into $destZip"
    Run-7Zip "$destZip" "$roomDataDir"
 }
 

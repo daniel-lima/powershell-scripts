@@ -16,7 +16,7 @@ if (-Not (Test-Path -LiteralPath "$7zaExePath")) {
    $zipFile = $ShellApp.NameSpace([IO.Path]::GetFullPath("$7zaZipPath"))
    $targetDir = $ShellApp.NameSpace([IO.Path]::GetFullPath("$workingDir"))
    foreach ($item in $zipFile.Items()) {
-      if ($item.Name -eq '7za') {
+      if ($item.Name -like '7za*') {
          $targetDir.copyHere($item, 16)
       }
    }
